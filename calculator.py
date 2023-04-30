@@ -1,12 +1,16 @@
-from calculatorGUI import *
+from calculatorController import *
 
 def main():
-    MainWindow = Tk()
-    MainWindow.geometry('500x600')
-    MainWindow.resizable(False, False)
+    app = QApplication([])
+    window = Controller()
+    window.geometry()
+    window.resize(False, False)
+    window.show()
+    app.exec_()
 
-    Ui_MainWindow(MainWindow)
-    MainWindow.mainloop()
+
+
+
 
 if __name__ == '__main__':
     main()
