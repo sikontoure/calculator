@@ -89,7 +89,7 @@ class Controller(QMainWindow, Ui_MainWindow):
 
     def multiplication(self):
         display = self.numberDisplay.toPlainText()
-        display += ' * '
+        display += ' x '
         self.numberDisplay.setText(display)
 
     def subtraction(self):
