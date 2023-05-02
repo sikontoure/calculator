@@ -1,6 +1,7 @@
 from PyQt5.QtWidgets import *
 from calculatorGUI import *
 
+
 class Controller(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -16,6 +17,8 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.subtractButton.clicked.connect(lambda: self.subtraction())
         self.multiplyButton.clicked.connect(lambda: self.multiplication())
         self.divisionButton.clicked.connect(lambda: self.division())
+        self.negativeButton.clicked.connect(lambda: self.negative())
+        self.decimalButton.clicked.connect(lambda: self.decimal())
 
         self.zeroButton.clicked.connect(lambda: self.zero())
         self.oneButton.clicked.connect(lambda: self.one())
@@ -32,60 +35,66 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.numberDisplay.setText('')
 
     def equal(self):
-        equation = self.numberDisplay.toPlainText().split()
-        print(equation)
-        equation_funt = []
-        equation_num = []
+        try:
+            equation = self.numberDisplay.toPlainText().split()
+            print(equation)
+            equation_funt = []
+            equation_num = []
 
-        num = 0
-        while num < len(equation):
-            x = equation[num]
+            num = 0
+            while num < len(equation):
+                x = equation[num]
 
-            if x.isdigit():
-                equation_num.append(float(x))
-            elif x == '+':
-                equation_funt.append(0)
-            elif x == '-':
-                equation_funt.append(1)
-            elif x == 'x':
-                equation_funt.append(2)
-            elif x == '/':
-                equation_funt.append(3)
+                if x.isdigit() or (x.startswith('-')):
+                    equation_num.append(float(x))
+                elif x == '+':
+                    equation_funt.append(0)
+                elif x == '-':
+                    equation_funt.append(1)
+                elif x == '*':
+                    equation_funt.append(2)
+                elif x == '/':
+                    equation_funt.append(3)
 
-            num += 1
-        print(equation_num)
-        print(equation_funt)
+                num += 1
+            print(equation_num)
+            print(equation_funt)
+
+            if len(equation_funt) >= len(equation_num):
+                self.numberDisplay.setText('INVALID')
 
 
-        if len(equation_funt) >= len(equation_num):
+            else:
+                n = 0
+                total = 0
+                n1 = equation_num[n]
+                while n < (len(equation_num) - 1):
+                    n2 = equation_num[n + 1]
+                    if equation_funt[n] == 0:
+                        total = n1 + n2
+                    elif equation_funt[n] == 1:
+                        total = n1 - n2
+                    elif equation_funt[n] == 2:
+                        total = n1 * n2
+                    elif equation_funt[n] == 3:
+                        total = n1 / n2
+
+                    n1 = total
+                    n += 1
+
+                total = round(total)
+                self.numberDisplay.setText(f'{total}')
+        except RuntimeError:
             self.numberDisplay.setText('INVALID')
 
-        else:
-            n = 0
-            total = 0
-            n1 = equation_num[n]
-            while n < (len(equation_num) - 1):
-                n2 = equation_num[n + 1]
-                if equation_funt[n] == 0:
-                    total = n1 + n2
-                elif equation_funt[n] == 1:
-                    total = n1 - n2
-                elif equation_funt[n] == 2:
-                    total = n1 * n2
-                elif equation_funt[n] == 3:
-                    total = n1 / n2
-
-                n1 = total
-                n += 1
-
-
-            total = round(total)
-            self.numberDisplay.setText(f'{total}')
-
     def division(self):
-        display = self.numberDisplay.toPlainText()
-        display += ' / '
-        self.numberDisplay.setText(display)
+        try:
+            display = self.numberDisplay.toPlainText()
+            display += ' / '
+            self.numberDisplay.setText(display)
+
+        except ZeroDivisionError:
+            self.numberDisplay.setText('cannot divide by zero')
 
     def multiplication(self):
         display = self.numberDisplay.toPlainText()
@@ -107,63 +116,67 @@ class Controller(QMainWindow, Ui_MainWindow):
         display += '0'
         self.numberDisplay.setText(display)
 
-
     def one(self):
         display = self.numberDisplay.toPlainText()
         display += '1'
         self.numberDisplay.setText(display)
-
 
     def two(self):
         display = self.numberDisplay.toPlainText()
         display += '2'
         self.numberDisplay.setText(display)
 
-
     def three(self):
         display = self.numberDisplay.toPlainText()
         display += '3'
         self.numberDisplay.setText(display)
-
 
     def four(self):
         display = self.numberDisplay.toPlainText()
         display += '4'
         self.numberDisplay.setText(display)
 
-
     def five(self):
         display = self.numberDisplay.toPlainText()
         display += '5'
         self.numberDisplay.setText(display)
-
 
     def six(self):
         display = self.numberDisplay.toPlainText()
         display += '6'
         self.numberDisplay.setText(display)
 
-
     def seven(self):
         display = self.numberDisplay.toPlainText()
         display += '7'
         self.numberDisplay.setText(display)
-
 
     def eight(self):
         display = self.numberDisplay.toPlainText()
         display += '8'
         self.numberDisplay.setText(display)
 
-
     def nine(self):
         display = self.numberDisplay.toPlainText()
         display += '9'
         self.numberDisplay.setText(display)
 
+    def negative(self):
+        display = self.numberDisplay.toPlainText()
 
-    def negative(self, display):
-        pass
+        if display == '':
+            self.numberDisplay.setText("-")
+        elif display == '-':
+            pass
+        elif display[0] == '-':
+            self.numberDisplay.setText(display[0:])
+        else:
+            self.numberDisplay.setText(f"-{display}")
 
-    def decimal(self, display):
-        pass
+    def decimal(self):
+        display = self.numberDisplay.toPlainText()
+
+        if '.' not in display:
+            display += '.'
+
+        self.numberDisplay.setText(display)
