@@ -46,12 +46,16 @@ class Controller(QMainWindow, Ui_MainWindow):
                 x = equation[num]
 
                 if x.isdigit() or (x.startswith('-')):
+                    if x == '-0':
+                        raise RuntimeError
+                    equation_num.append(float(x))
+                elif '.' in x:
                     equation_num.append(float(x))
                 elif x == '+':
                     equation_funt.append(0)
                 elif x == '-':
                     equation_funt.append(1)
-                elif x == '*':
+                elif x == 'x':
                     equation_funt.append(2)
                 elif x == '/':
                     equation_funt.append(3)
@@ -62,7 +66,6 @@ class Controller(QMainWindow, Ui_MainWindow):
 
             if len(equation_funt) >= len(equation_num):
                 self.numberDisplay.setText('INVALID')
-
 
             else:
                 n = 0
@@ -82,7 +85,10 @@ class Controller(QMainWindow, Ui_MainWindow):
                     n1 = total
                     n += 1
 
-                total = round(total)
+                if '.' in str(total):
+                    if str(total).endswith('.0'):
+                        total = round(total)
+
                 self.numberDisplay.setText(f'{total}')
         except RuntimeError:
             self.numberDisplay.setText('INVALID')
@@ -163,20 +169,71 @@ class Controller(QMainWindow, Ui_MainWindow):
 
     def negative(self):
         display = self.numberDisplay.toPlainText()
-
-        if display == '':
+        display2 = display.split()
+        print(display2)
+        if display2 == []:
             self.numberDisplay.setText("-")
-        elif display == '-':
-            pass
-        elif display[0] == '-':
-            self.numberDisplay.setText(display[0:])
         else:
-            self.numberDisplay.setText(f"-{display}")
+            final_display = ''
+            neg_check = display2[(len(display2) - 1)]
+            print(display2)
+
+            if neg_check == "+":
+                self.numberDisplay.setText(f'{display} -')
+            if neg_check == '-':
+                pass
+            elif neg_check == "x":
+                self.numberDisplay.setText(f'{display} -')
+            elif neg_check == "/":
+                self.numberDisplay.setText(f'{display} -')
+            elif neg_check == 0:
+                final_display += f'-{neg_check}'
+            else:
+                neg_check = f'-{neg_check}'
+
+                display2.pop(len(display2) - 1)
+                num = 0
+                while num < len(display2):
+                    final_display += display2[num]
+                    final_display += ' '
+                    num += 1
+                final_display += f'{neg_check}'
+                print(neg_check)
+                self.numberDisplay.setText(final_display)
+
+
 
     def decimal(self):
         display = self.numberDisplay.toPlainText()
+        display2 = display.split()
+        decimal_check = display2[(len(display2) - 1)]
+        print(decimal_check)
+        deci = False
 
-        if '.' not in display:
-            display += '.'
+        if '.' in decimal_check:
+            deci = True
+            self.numberDisplay.setText(display)
+        elif decimal_check == '+':
+            deci = True
+            self.numberDisplay.setText("INVALID")
+        elif decimal_check == '-':
+            deci = True
+            self.numberDisplay.setText("INVALID")
+        elif decimal_check == 'x':
+            deci = True
+            self.numberDisplay.setText("INVALID")
+        elif decimal_check == '/':
+            deci = True
+            self.numberDisplay.setText("INVALID")
 
-        self.numberDisplay.setText(display)
+        print(deci)
+
+        if deci == False:
+            final_display = ''
+            num = 0
+            while num < (len(display2) - 1):
+                final_display += display2[num]
+                final_display += ' '
+                num += 1
+            final_display += f'{display2[num]}.'
+            self.numberDisplay.setText(final_display)
