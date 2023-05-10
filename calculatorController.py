@@ -1,5 +1,6 @@
 from PyQt5.QtWidgets import *
 from calculatorGUI import *
+from calculatorModule import Formulas
 
 
 class Controller(QMainWindow, Ui_MainWindow):
@@ -46,10 +47,6 @@ class Controller(QMainWindow, Ui_MainWindow):
                 x = equation[num]
 
                 if x.isdigit() or (x.startswith('-')):
-                    if x == '-0':
-                        raise RuntimeError
-                    equation_num.append(float(x))
-                elif '.' in x:
                     equation_num.append(float(x))
                 elif x == '+':
                     equation_funt.append(0)
@@ -66,6 +63,7 @@ class Controller(QMainWindow, Ui_MainWindow):
 
             if len(equation_funt) >= len(equation_num):
                 self.numberDisplay.setText('INVALID')
+
 
             else:
                 n = 0
@@ -85,37 +83,11 @@ class Controller(QMainWindow, Ui_MainWindow):
                     n1 = total
                     n += 1
 
-                if '.' in str(total):
-                    if str(total).endswith('.0'):
-                        total = round(total)
-
+                total = round(total)
                 self.numberDisplay.setText(f'{total}')
         except RuntimeError:
             self.numberDisplay.setText('INVALID')
 
-    def division(self):
-        try:
-            display = self.numberDisplay.toPlainText()
-            display += ' / '
-            self.numberDisplay.setText(display)
-
-        except ZeroDivisionError:
-            self.numberDisplay.setText('cannot divide by zero')
-
-    def multiplication(self):
-        display = self.numberDisplay.toPlainText()
-        display += ' x '
-        self.numberDisplay.setText(display)
-
-    def subtraction(self):
-        display = self.numberDisplay.toPlainText()
-        display += ' - '
-        self.numberDisplay.setText(display)
-
-    def addition(self):
-        display = self.numberDisplay.toPlainText()
-        display += ' + '
-        self.numberDisplay.setText(display)
 
     def zero(self):
         display = self.numberDisplay.toPlainText()
@@ -200,8 +172,6 @@ class Controller(QMainWindow, Ui_MainWindow):
                 final_display += f'{neg_check}'
                 print(neg_check)
                 self.numberDisplay.setText(final_display)
-
-
 
     def decimal(self):
         display = self.numberDisplay.toPlainText()
