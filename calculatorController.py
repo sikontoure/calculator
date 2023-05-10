@@ -2,7 +2,6 @@ from PyQt5.QtWidgets import *
 from calculatorGUI import *
 from calculatorModule import Formulas
 
-
 class Controller(QMainWindow, Ui_MainWindow):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
@@ -44,9 +43,15 @@ class Controller(QMainWindow, Ui_MainWindow):
 
             num = 0
             while num < len(equation):
+                print(len(equation))
                 x = equation[num]
 
-                if x.isdigit() or (x.startswith('-')):
+                if x.lstrip('-').isdigit():
+                    if x == '-0':
+                        raise RuntimeError
+                    equation_num.append(float(x))
+
+                elif '.' in x:
                     equation_num.append(float(x))
                 elif x == '+':
                     equation_funt.append(0)
@@ -56,6 +61,8 @@ class Controller(QMainWindow, Ui_MainWindow):
                     equation_funt.append(2)
                 elif x == '/':
                     equation_funt.append(3)
+                else:
+                    raise RuntimeError
 
                 num += 1
             print(equation_num)
@@ -63,7 +70,6 @@ class Controller(QMainWindow, Ui_MainWindow):
 
             if len(equation_funt) >= len(equation_num):
                 self.numberDisplay.setText('INVALID')
-
 
             else:
                 n = 0
@@ -78,16 +84,45 @@ class Controller(QMainWindow, Ui_MainWindow):
                     elif equation_funt[n] == 2:
                         total = n1 * n2
                     elif equation_funt[n] == 3:
-                        total = n1 / n2
+                        if n2 != 0:
+                            total = n1 / n2
+                        else:
+                            raise RuntimeError
 
                     n1 = total
                     n += 1
 
-                total = round(total)
+                if '.' in str(total):
+                    if str(total).endswith('.0'):
+                        total = round(total)
+
                 self.numberDisplay.setText(f'{total}')
         except RuntimeError:
             self.numberDisplay.setText('INVALID')
 
+    def division(self):
+        try:
+            display = self.numberDisplay.toPlainText()
+            display += ' / '
+            self.numberDisplay.setText(display)
+
+        except ZeroDivisionError:
+            self.numberDisplay.setText('cannot divide by zero')
+
+    def multiplication(self):
+        display = self.numberDisplay.toPlainText()
+        display += ' x '
+        self.numberDisplay.setText(display)
+
+    def subtraction(self):
+        display = self.numberDisplay.toPlainText()
+        display += ' - '
+        self.numberDisplay.setText(display)
+
+    def addition(self):
+        display = self.numberDisplay.toPlainText()
+        display += ' + '
+        self.numberDisplay.setText(display)
 
     def zero(self):
         display = self.numberDisplay.toPlainText()
@@ -145,14 +180,16 @@ class Controller(QMainWindow, Ui_MainWindow):
         print(display2)
         if display2 == []:
             self.numberDisplay.setText("-")
+        elif '-' in display2[len(display2) - 1]:
+            pass
         else:
             final_display = ''
             neg_check = display2[(len(display2) - 1)]
             print(display2)
 
-            if neg_check == "+":
+            if neg_check == '+':
                 self.numberDisplay.setText(f'{display} -')
-            if neg_check == '-':
+            elif neg_check == '-':
                 pass
             elif neg_check == "x":
                 self.numberDisplay.setText(f'{display} -')
@@ -172,6 +209,8 @@ class Controller(QMainWindow, Ui_MainWindow):
                 final_display += f'{neg_check}'
                 print(neg_check)
                 self.numberDisplay.setText(final_display)
+
+
 
     def decimal(self):
         display = self.numberDisplay.toPlainText()
