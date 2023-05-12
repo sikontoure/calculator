@@ -1,10 +1,16 @@
 from PyQt5.QtWidgets import *
 from calculatorGUI import *
-from calculatorModule import Formulas
+
 
 class Controller(QMainWindow, Ui_MainWindow):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
+    """
+    Controller class that contains the functionality of a Calculator.
+    """
+    def __init__(self):
+        super().__init__()
+        """
+        Constructor that sets the buttons and displays of a Calculator
+        """
 
         self.setupUi(self)
 
@@ -31,10 +37,16 @@ class Controller(QMainWindow, Ui_MainWindow):
         self.eightButton.clicked.connect(lambda: self.eight())
         self.nineButton.clicked.connect(lambda: self.nine())
 
-    def clear(self):
+    def clear(self) -> None:
+        """
+        Clears the number display.
+        """
         self.numberDisplay.setText('')
 
-    def equal(self):
+    def equal(self) -> None:
+        """
+        Performs the calculations and displays the results.
+        """
         try:
             equation = self.numberDisplay.toPlainText().split()
             print(equation)
@@ -100,7 +112,11 @@ class Controller(QMainWindow, Ui_MainWindow):
         except RuntimeError:
             self.numberDisplay.setText('INVALID')
 
-    def division(self):
+    def division(self) -> str:
+        """
+        Adds a division symbol to the number display and handles
+        the ZeroDivisionError by setting the number display to 'cannot divide by zero'.
+        """
         try:
             display = self.numberDisplay.toPlainText()
             display += ' / '
@@ -109,72 +125,114 @@ class Controller(QMainWindow, Ui_MainWindow):
         except ZeroDivisionError:
             self.numberDisplay.setText('cannot divide by zero')
 
-    def multiplication(self):
+    def multiplication(self) -> str:
+        """
+        Adds a multiplication symbol to the number display.
+        """
         display = self.numberDisplay.toPlainText()
         display += ' x '
         self.numberDisplay.setText(display)
 
-    def subtraction(self):
+    def subtraction(self) -> str:
+        """
+        Adds a subtraction symbol to the number display.
+        """
         display = self.numberDisplay.toPlainText()
         display += ' - '
         self.numberDisplay.setText(display)
 
-    def addition(self):
+    def addition(self) -> str:
+        """
+        Adds an addition symbol to the number display.
+        """
         display = self.numberDisplay.toPlainText()
         display += ' + '
         self.numberDisplay.setText(display)
 
-    def zero(self):
+    def zero(self) -> str:
+        """
+        Displays the number 0.
+        """
         display = self.numberDisplay.toPlainText()
         display += '0'
         self.numberDisplay.setText(display)
 
-    def one(self):
+    def one(self) -> str:
+        """
+        Displays the number 1.
+        """
         display = self.numberDisplay.toPlainText()
         display += '1'
         self.numberDisplay.setText(display)
 
-    def two(self):
+    def two(self) -> str:
+        """
+        Displays the number 2.
+        """
         display = self.numberDisplay.toPlainText()
         display += '2'
         self.numberDisplay.setText(display)
 
-    def three(self):
+    def three(self) -> str:
+        """
+        Displays the number 3.
+        """
         display = self.numberDisplay.toPlainText()
         display += '3'
         self.numberDisplay.setText(display)
 
-    def four(self):
+    def four(self) -> str:
+        """
+        Displays the number 4.
+        """
         display = self.numberDisplay.toPlainText()
         display += '4'
         self.numberDisplay.setText(display)
 
-    def five(self):
+    def five(self) -> str:
+        """
+        Displays the number 5.
+        """
         display = self.numberDisplay.toPlainText()
         display += '5'
         self.numberDisplay.setText(display)
 
-    def six(self):
+    def six(self) -> str:
+        """
+        Displays the number 6.
+        """
         display = self.numberDisplay.toPlainText()
         display += '6'
         self.numberDisplay.setText(display)
 
-    def seven(self):
+    def seven(self) -> str:
+        """
+        Displays the number 7.
+        """
         display = self.numberDisplay.toPlainText()
         display += '7'
         self.numberDisplay.setText(display)
 
-    def eight(self):
+    def eight(self) -> str:
+        """
+        Displays the number 8.
+        """
         display = self.numberDisplay.toPlainText()
         display += '8'
         self.numberDisplay.setText(display)
 
-    def nine(self):
+    def nine(self) -> str:
+        """
+        Displays the number 9.
+        """
         display = self.numberDisplay.toPlainText()
         display += '9'
         self.numberDisplay.setText(display)
 
-    def negative(self):
+    def negative(self) -> None:
+        """
+        If empty, displays the negative symbol when clicked.
+        """
         display = self.numberDisplay.toPlainText()
         display2 = display.split()
         print(display2)
@@ -210,9 +268,10 @@ class Controller(QMainWindow, Ui_MainWindow):
                 print(neg_check)
                 self.numberDisplay.setText(final_display)
 
-
-
-    def decimal(self):
+    def decimal(self) -> None:
+        """
+        Displays the decimal symbol if clicked. Returns invalid if it's placed after an operator.
+        """
         display = self.numberDisplay.toPlainText()
         display2 = display.split()
         decimal_check = display2[(len(display2) - 1)]
